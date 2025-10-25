@@ -1,46 +1,52 @@
-import { type JSX } from 'react';
-import { useNavigate } from 'react-router-dom';
-import bimg from '../images/bimg.png';
-import '../styles/site.css';
+import { type JSX } from "react";
+import { useNavigate } from "react-router-dom";
+import bimg from "../images/bimg.png";
 
 export default function Home(): JSX.Element {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleConfessClick = () => {
-        navigate('/generate', { state: { text: '' } });
-    };
+  const handleConfessClick = () => {
+    navigate("/generate", { state: { text: "" } });
+  };
 
-    return (
-        <div className="site-container">
-            <section className="hero">
-                <div className="hero-inner">
-                    <div className="left-col">
-                        <h1 className="title">
-                            Anonymous
-                            <br />
-                            Crypto
-                            <br />
-                            What if
-                        </h1>
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        {/* Left */}
+        <div className="flex flex-col gap-6 text-center lg:text-left">
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-[#1a4d2e] leading-tight">
+            Anonymous Crypto What If
+          </h1>
 
-                        <p className="subtitle">
-                            Share your anonymous what if. Turn your words into a bold image and we’ll post it to the feed.
-                        </p>
+          <p className="text-base sm:text-lg text-[#2d5f3f] max-w-md mx-auto lg:mx-0">
+            Share your anonymous what if. Turn your words into a bold image and
+            we will post it to the feed.
+          </p>
 
-                        <div className="action-row">
-                            <button className="primary-btn" onClick={handleConfessClick}>
-                                whatIf
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="right-col">
-                        <div className="tweet-mock">
-                            <img src={bimg} alt="whatIf preview" className="tweet-image" />
-                        </div>
-                    </div>
-                </div>
-            </section>
+          <button
+            onClick={handleConfessClick}
+            className="bg-[#ff8c42] hover:bg-[#ff8c42]/80 text-white font-semibold text-lg px-6 py-3 rounded-xl shadow-[0_4px_16px_rgba(255,140,66,0.35)]
+            active:translate-y-0 w-full sm:w-auto mx-auto lg:mx-0"
+          >
+            What If
+          </button>
         </div>
-    );
+
+        {/* Right */}
+        <div className="flex justify-center w-full">
+          <div
+            className="w-full max-w-xs sm:max-w-sm bg-white rounded-2xl p-4 border-4 border-[#1a4d2e]
+          shadow-[0_10px_40px_rgba(26,77,46,0.18)] hover:shadow-[0_14px_48px_rgba(26,77,46,0.22)]
+          transition-all"
+          >
+            <img
+              src={bimg}
+              alt="whatIf preview"
+              className="rounded-xl w-full"
+            />
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 }
