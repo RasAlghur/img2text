@@ -69,7 +69,8 @@ export default function ImagePage(): JSX.Element {
     setLoadingPreview(true);
 
     try {
-      const resp = await fetch("http://localhost:8080/api/generate", {
+      const SERVER_API = import.meta.env.VITE_API_URL as string;
+      const resp = await fetch(`${SERVER_API}/api/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
@@ -215,13 +216,12 @@ export default function ImagePage(): JSX.Element {
 
                   {/* Status */}
                   <div
-                    className={`text-sm font-medium min-h-5 ${
-                      status.includes("Error")
+                    className={`text-sm font-medium min-h-5 ${status.includes("Error")
                         ? "text-red-600"
                         : status.includes("Sent")
-                        ? "text-green-600"
-                        : "text-gray-600"
-                    } transition-colors duration-200`}
+                          ? "text-green-600"
+                          : "text-gray-600"
+                      } transition-colors duration-200`}
                     aria-live="polite"
                   >
                     {status}
