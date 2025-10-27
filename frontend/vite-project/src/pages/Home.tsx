@@ -14,19 +14,18 @@ export default function Home(): JSX.Element {
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         {/* Left */}
         <div className="flex flex-col gap-6 text-center lg:text-left">
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-[#1a4d2e] leading-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-[#111111]">
             Anonymous Crypto What If
           </h1>
 
-          <p className="text-base sm:text-lg text-[#2d5f3f] max-w-md mx-auto lg:mx-0">
-            Share your anonymous what if. Turn your words into a bold image and
-            we will post it to the feed.
+          <p className="text-base sm:text-lg text-[#444444]">
+            Share your anonymous what if. Turn your words into a bold image.
           </p>
 
           <button
             onClick={handleConfessClick}
-            className="bg-[#ff8c42] hover:bg-[#ff8c42]/80 text-white font-semibold text-lg px-6 py-3 rounded-xl shadow-[0_4px_16px_rgba(255,140,66,0.35)]
-            active:translate-y-0 w-full sm:w-auto mx-auto lg:mx-0"
+            className="bg-[#00C46C] text-white font-semibold text-lg px-6 py-3
+    rounded-full shadow-lg hover:opacity-90 transition"
           >
             What If
           </button>

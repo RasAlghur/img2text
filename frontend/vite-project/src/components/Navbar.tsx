@@ -1,57 +1,63 @@
 import { useState, type JSX } from "react";
-import { Link } from "react-router-dom";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiMenu, FiX, FiGlobe } from "react-icons/fi";
+import { FaXTwitter, FaTelegram } from "react-icons/fa6";
+import dex from "../assets/dex-screener.png";
+import logo from "../images/aimg.png";
 
 export default function Navbar(): JSX.Element {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Close mobile menu when clicking on a link
-  const handleLinkClick = () => {
-    setMenuOpen(false);
-  };
+  const handleLinkClick = () => setMenuOpen(false);
 
   return (
-    <header className="w-full sticky top-0 z-50 bg-[#1a4d2e] border-b-4 border-[#ff8c42]">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo */}
+    <header className="w-full sticky top-0 z-50 bg-white border-b-2 border-[#E5E7EB]">
+      <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
         <a href="/" className="flex items-center gap-2">
-          <span className="text-[#ff8c42] font-black text-3xl leading-none">
-            ??
-          </span>
-          <span className="text-white text-xl font-bold tracking-tight">
-            WhatIf
-          </span>
+          <img src={logo} alt="" className="w-48" />
         </a>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-4">
           <a
-            href="https://twitter.com"
+            href="https://what-if.xyz/"
             target="_blank"
             rel="noreferrer"
-            className="text-white font-medium hover:text-[#ff8c42] transition-colors duration-300"
+            className="flex items-center gap-2 bg-gray-500 text-white font-medium transition-colors py-2 px-5 rounded-full"
           >
-            twitter
+            <FiGlobe /> Website
           </a>
 
           <a
-            href="https://t.me/"
-            className="text-white font-medium hover:text-[#ff8c42] transition-colors duration-300"
+            href="https://x.com/i/communities/1981433336192225762"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 bg-[#00C46C] text-white font-medium transition-colors py-2 px-4 rounded-full"
           >
-            enquiries
+            <FaXTwitter /> Community
           </a>
 
-          <Link
-            to="/generate"
-            className="bg-[#ff8c42] text-white font-semibold px-4 py-2 rounded-lg border-2 border-[#ff8c42] hover:bg-white hover:text-[#ff8c42] transition-all duration-300 transform hover:scale-105"
+          <a
+            href="https://dexscreener.com/solana/je9zetanevbcaurewtbwhb9jjeuceuekom3btq4vvgcp"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 bg-[#111111] text-white font-medium transition-colors py-2 px-4 rounded-full"
           >
-            whatif
-          </Link>
+            <img src={dex} alt="dexscreener" className="w-5 h-5" /> Dexscreener
+          </a>
+
+          <a
+            href="https://t.me/whatifpump"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 bg-[#0088cc] text-white font-medium transition-colors py-2 px-4 rounded-full"
+          >
+            <FaTelegram /> Telegram
+          </a>
         </nav>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Toggle */}
         <button
-          className="text-white text-3xl md:hidden transition-transform duration-300 hover:scale-110"
+          className="text-[#111111] text-3xl md:hidden"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
@@ -59,94 +65,56 @@ export default function Navbar(): JSX.Element {
         </button>
       </div>
 
-      {/* Mobile Navigation with Smooth Animations */}
+      {/* Mobile Navigation */}
       <div
-        className={`
-          md:hidden 
-          overflow-hidden 
-          transition-all 
-          duration-500 
-          ease-in-out
-          ${menuOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"}
-        `}
+        className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
+          menuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+        }`}
       >
         <nav
-          className={`
-            bg-[#1a4d2e] 
-            px-6 
-            py-8 
-            flex 
-            flex-col 
-            items-center
-            gap-4 
-            border-t-2 
-            border-[#ff8c42]
-            transform 
-            transition-transform 
-            duration-500 
-            ease-in-out
-            ${menuOpen ? "translate-y-0" : "-translate-y-4"}
-          `}
+          className={`px-6 py-6 flex flex-col items-center gap-4 transform transition-transform duration-500 ease-in-out ${
+            menuOpen ? "translate-y-0" : "-translate-y-4"
+          }`}
         >
           <a
-            href="https://twitter.com"
+            href="https://what-if.xyz/"
             target="_blank"
             rel="noreferrer"
             onClick={handleLinkClick}
-            className="
-              text-white 
-              font-medium 
-              hover:text-[#ff8c42] 
-              transition-all 
-              duration-300 
-              transform 
-              hover:translate-x-2
-              hover:scale-105
-            "
+            className="flex items-center gap-2 bg-gray-500 text-white font-medium transition-colors py-2 px-5 rounded-full"
           >
-            twitter
+            <FiGlobe /> Website
           </a>
 
           <a
-            href="https://t.me/"
+            href="https://x.com/i/communities/1981433336192225762"
+            target="_blank"
+            rel="noreferrer"
             onClick={handleLinkClick}
-            className="
-              text-white 
-              font-medium 
-              hover:text-[#ff8c42] 
-              transition-all 
-              duration-300 
-              transform 
-              hover:translate-x-2
-              hover:scale-105
-            "
+            className="flex items-center gap-2 bg-[#00C46C] text-white font-medium transition-colors py-2 px-4 rounded-full"
           >
-            enquiries
+            <FaXTwitter /> Community
           </a>
 
-          <Link
-            to="/generate"
+          <a
+            href="https://dexscreener.com/solana/je9zetanevbcaurewtbwhb9jjeuceuekom3btq4vvgcp"
+            target="_blank"
+            rel="noreferrer"
             onClick={handleLinkClick}
-            className="
-              bg-[#ff8c42] 
-              text-white 
-              font-semibold 
-              px-4 
-              py-2 
-              rounded-lg 
-              border-2 
-              border-[#ff8c42] 
-              hover:bg-white 
-              hover:text-[#ff8c42] 
-              transition-all 
-              duration-300 
-              transform 
-              hover:scale-105
-              w-fit
-            "
+            className="flex items-center gap-2 bg-[#111111] text-white font-medium transition-colors py-2 px-4 rounded-full"
           >
-            whatif
-          </Link>
+            <img src={dex} alt="dexscreener" className="w-8 h-8" /> Dexscreener
+          </a>
+
+          <a
+            href="https://t.me/whatifpump"
+            target="_blank"
+            rel="noreferrer"
+            onClick={handleLinkClick}
+            className="flex items-center gap-2 bg-[#0088cc] text-white font-medium transition-colors py-2 px-4 rounded-full"
+          >
+            <FaTelegram /> Telegram
+          </a>
         </nav>
       </div>
     </header>

@@ -1,8 +1,33 @@
-// src/pages/ImagePage.tsx
 import React, { useState, useEffect, type JSX } from "react";
 import { useLocation } from "react-router-dom";
 
 type LocationState = { text?: string } | null;
+
+// Validation function
+const validateText = (text: string): { isValid: boolean; message: string } => {
+  const trimmedText = text.trim().toLowerCase();
+
+  if (!trimmedText) {
+    return { isValid: false, message: "Please enter your what if scenario" };
+  }
+
+  if (!trimmedText.includes("what if")) {
+    return {
+      isValid: false,
+      message: "Your scenario must contain 'what if' (case insensitive)",
+    };
+  }
+
+  if (trimmedText.length < 10) {
+    return {
+      isValid: false,
+      message:
+        "Please provide a more detailed scenario (minimum 10 characters)",
+    };
+  }
+
+  return { isValid: true, message: "" };
+};
 
 export default function ImagePage(): JSX.Element {
   const location = useLocation();
@@ -13,13 +38,32 @@ export default function ImagePage(): JSX.Element {
   const [status, setStatus] = useState<string>("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loadingPreview, setLoadingPreview] = useState<boolean>(false);
+  const [validationError, setValidationError] = useState<string>("");
 
   useEffect(() => {
     if (initial) setText(initial);
   }, [initial]);
 
+  // Real-time validation as user types
+  useEffect(() => {
+    if (text.trim()) {
+      const validation = validateText(text);
+      setValidationError(validation.isValid ? "" : validation.message);
+    } else {
+      setValidationError("");
+    }
+  }, [text]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    // Validate before submitting
+    const validation = validateText(text);
+    if (!validation.isValid) {
+      setStatus(`Error: ${validation.message}`);
+      return;
+    }
+
     setStatus("Sending...");
     setPreviewUrl(null);
     setLoadingPreview(true);
@@ -30,8 +74,16 @@ export default function ImagePage(): JSX.Element {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
       });
+
       const data = await resp.json();
-      if (!resp.ok) throw new Error(data?.error || "Request failed");
+
+      if (!resp.ok) {
+        // Handle backend validation errors
+        if (data?.error?.includes("what if")) {
+          throw new Error(data.error);
+        }
+        throw new Error(data?.error || "Request failed");
+      }
 
       const fileUrl = data?.file_url ?? null;
       if (fileUrl) {
@@ -41,12 +93,15 @@ export default function ImagePage(): JSX.Element {
         setStatus("Sent ✅ (no preview available)");
       }
       setText("");
+      setValidationError("");
     } catch (err) {
-      setStatus("Error: " + (err || String(err)));
+      setStatus("Error: " + (err instanceof Error ? err.message : String(err)));
     } finally {
       setLoadingPreview(false);
     }
   }
+
+  const isFormValid = validateText(text).isValid;
 
   return (
     <section className="min-h-screen bg-white py-8 px-4">
@@ -69,7 +124,7 @@ export default function ImagePage(): JSX.Element {
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Textarea */}
-                <div>
+                <div className="space-y-2">
                   <label htmlFor="whatif" className="sr-only">
                     What if?
                   </label>
@@ -77,10 +132,52 @@ export default function ImagePage(): JSX.Element {
                     id="whatif"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    placeholder="Write your anonymous what if here..."
+                    placeholder="What if I could change the world with crypto?..."
                     rows={8}
-                    className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-500 focus:border-black focus:ring-2 focus:ring-black/10 focus:outline-none transition-all duration-200 resize-none"
+                    className={`w-full rounded-xl border bg-white px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 transition-all duration-200 resize-none ${
+                      validationError && text.trim()
+                        ? "border-red-300 focus:border-red-500 focus:ring-red-500/10"
+                        : "border-gray-300 focus:border-black focus:ring-black/10"
+                    }`}
                   />
+
+                  {/* Validation Message */}
+                  {validationError && (
+                    <div className="flex items-center gap-2 text-red-600 text-sm">
+                      <svg
+                        className="w-4 h-4 flex-shrink-0"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>{validationError}</span>
+                    </div>
+                  )}
+
+                  {/* Help Text */}
+                  {!validationError && text.trim() && (
+                    <div className="flex items-center gap-2 text-green-600 text-sm">
+                      <svg
+                        className="w-4 h-4 flex-shrink-0"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>
+                        Looking good! Your scenario contains "what if"
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Actions */}
@@ -89,8 +186,9 @@ export default function ImagePage(): JSX.Element {
                     {/* Submit Button */}
                     <button
                       type="submit"
-                      disabled={!text.trim() || loadingPreview}
-                      className="flex-1 sm:flex-none px-6 py-3 bg-black text-white font-semibold rounded-xl border-2 border-black hover:bg-gray-800 hover:border-gray-800 hover:scale-105 disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed disabled:scale-100 transition-all duration-200 shadow-sm"
+                      disabled={!isFormValid || loadingPreview}
+                      className="px-6 py-3 bg-[#00C46C] text-white font-semibold rounded-full
+    hover:opacity-90 disabled:bg-gray-300 transition shadow-sm"
                     >
                       {loadingPreview ? (
                         <span className="flex items-center justify-center gap-2">
@@ -105,7 +203,10 @@ export default function ImagePage(): JSX.Element {
                     {/* Clear Button */}
                     <button
                       type="button"
-                      onClick={() => setText("")}
+                      onClick={() => {
+                        setText("");
+                        setValidationError("");
+                      }}
                       className="px-4 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
                     >
                       Clear
